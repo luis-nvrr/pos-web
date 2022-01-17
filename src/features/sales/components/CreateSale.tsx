@@ -24,6 +24,10 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
     (state) => state.increaseItemInTicket,
   )
 
+  const decreaseItem = useTicketItemsStore(
+    (state) => state.decreaseItemInTicket,
+  )
+
   const increaseStyle = {
     color: '#16a34a',
     fontSize: '1.5rem',
@@ -45,6 +49,7 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
     const productItemId: number = Number(
       event.target.parentNode.parentNode.parentNode.getAttribute('id'),
     )
+    decreaseItem(productItemId)
   }
 
   return (
