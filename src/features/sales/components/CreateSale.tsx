@@ -154,32 +154,42 @@ const selectItems: SelectItem[] = [
   { id: 4, description: 'Mercadopago', value: 'mercadopago' },
 ]
 
-export const SummaryCard: React.FC = () => (
-  <div className="max-w-md rounded-sm shadow-lg border border-gray-200 bg-gray-100">
-    <div className="p-6 space-y-6">
-      <div className="space-y-2">
-        <div className="uppercase text-gray-500 font-semibold text-sm">
-          Total:
+type SummaryCardProps = {
+  items: SaleItem[]
+}
+
+export const SummaryCard: React.FC<SummaryCardProps> = ({ items }) => {
+  const totalPrice = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  )
+  return (
+    <div className="max-w-md rounded-sm shadow-lg border border-gray-200 bg-gray-100">
+      <div className="p-6 space-y-6">
+        <div className="space-y-2">
+          <div className="uppercase text-gray-500 font-semibold text-sm">
+            Total:
+          </div>
+          <div className="text-4xl font-bold text-center">{`$${totalPrice}`}</div>
         </div>
-        <div className="text-4xl font-bold text-center">$100</div>
-      </div>
-      <div className="space-y-2">
-        <div className="uppercase text-gray-500 font-semibold text-sm">
-          Método de pago:
+        <div className="space-y-2">
+          <div className="uppercase text-gray-500 font-semibold text-sm">
+            Método de pago:
+          </div>
+          <Select items={selectItems} />
         </div>
-        <Select items={selectItems} />
-      </div>
-      <div>
-        <button
-          type="button"
-          className="bg-orange-500 rounded-xl p-2 text-white w-full"
-        >
-          Vender
-        </button>
+        <div>
+          <button
+            type="button"
+            className="bg-orange-500 rounded-xl p-2 text-white w-full"
+          >
+            Vender
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 export const CreateSale: React.FC = () => {
   const addItemToTicket = useTicketItemsStore((state) => state.addItemToTicket)
@@ -195,7 +205,7 @@ export const CreateSale: React.FC = () => {
       <SearchProduct handleSelectChange={handleSelectChange} />
       <div className="flex flex-row space-x-10">
         <ItemsTable itemsToSale={items} />
-        <SummaryCard />
+        <SummaryCard items={items} />
       </div>
     </div>
   )
