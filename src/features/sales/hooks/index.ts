@@ -7,6 +7,7 @@ type TicketItemsStore = {
   addItemToTicket: (product: Product) => void
   increaseItemInTicket: (productId: number) => void
   decreaseItemInTicket: (productId: number) => void
+  removeItemFromTicket: (itemId: number) => void
 }
 
 const sortItemsByCreationOrder = (items: SaleItem[]): SaleItem[] =>
@@ -18,6 +19,8 @@ const increaseItemInTicket = (state: TicketItemsStore, productId: number) => {
   )
 
   if (!itemToIncrease) {
+    console.error('no item to increase')
+    console.log(productId)
     return {
       items: [...state.items],
     }
@@ -38,9 +41,7 @@ const increaseItemInTicket = (state: TicketItemsStore, productId: number) => {
 const handleIncreaseItemInTicket = (
   set: SetState<TicketItemsStore>,
   productId: number,
-): void => {
-  set((state) => increaseItemInTicket(state, productId))
-}
+): void => set((state) => increaseItemInTicket(state, productId))
 
 const handleAddItemToTicket = (
   set: SetState<TicketItemsStore>,
@@ -52,7 +53,8 @@ const handleAddItemToTicket = (
     )
 
     if (existingItem) {
-      return increaseItemInTicket(state, existingItem.product.id)
+      const newState = increaseItemInTicket(state, existingItem.product.id)
+      return newState
     }
 
     const ticketItem: SaleItem = {
@@ -122,19 +124,8 @@ const useTicketItemsStore = create<TicketItemsStore>((set) => ({
     handleIncreaseItemInTicket(set, productId),
   decreaseItemInTicket: (productId) =>
     handleDecreaseItemInTicket(set, productId),
+  removeItemFromTicket: (productId) =>
+    handleRemoveItemFromTicket(set, productId),
 }))
 
 export default useTicketItemsStore
-
-/*
-
-  removeItemFromTicket: (itemId: number) => void
-
-        const newQuantity = existingItem.quantity + 1
-      const otherItems = state.items.filter(
-        (item) => item.product.id !== existingItem.product.id,
-      )
-      return {
-        items: [...otherItems, { ...existingItem, quantity: newQuantity }],
-      }
-  */

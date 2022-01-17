@@ -1,5 +1,6 @@
 import React from 'react'
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
+import { RiDeleteBin2Line } from 'react-icons/ri'
 import SearchProduct from '~/features/products/components/SearchProduct'
 import { SaleItem } from '../types'
 import { Select, SelectItem } from '~/components/Select/Select'
@@ -13,6 +14,7 @@ const headers = [
   { id: 4, description: 'cantidad' },
   { id: 5, description: 'disponible' },
   { id: 6, description: 'subtotal' },
+  { id: 7, description: 'acciones' },
 ]
 
 type ItemsTableProps = {
@@ -28,6 +30,8 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
     (state) => state.decreaseItemInTicket,
   )
 
+  const removeItem = useTicketItemsStore((state) => state.removeItemFromTicket)
+
   const increaseStyle = {
     color: '#16a34a',
     fontSize: '1.5rem',
@@ -38,18 +42,21 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
     fontSize: '1.5rem',
   }
 
-  const handleIncreaseItemClick = (event: any) => {
-    const productItemId: number = Number(
-      event.target.parentNode.parentNode.parentNode.getAttribute('id'),
-    )
-    increaseItem(productItemId)
+  const deleteStyle = {
+    color: '#dc2626',
+    fontSize: '1.5rem',
   }
 
-  const handleDecreaseItemClick = (event: any) => {
-    const productItemId: number = Number(
-      event.target.parentNode.parentNode.parentNode.getAttribute('id'),
-    )
-    decreaseItem(productItemId)
+  const handleIncreaseItemClick = (productId: number) => {
+    increaseItem(productId)
+  }
+
+  const handleDecreaseItemClick = (productId: number) => {
+    decreaseItem(productId)
+  }
+
+  const handleRemoveItemClick = (productId: number) => {
+    removeItem(productId)
   }
 
   return (
@@ -92,17 +99,20 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
                     </div>
                   </td>
                   <td className="p-2 whitespace-nowrap ">
-                    <div
-                      id={`${item.product.id}`}
-                      className="flex items-center justify-center space-x-2"
-                    >
-                      <button type="button" onClick={handleDecreaseItemClick}>
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => handleDecreaseItemClick(item.product.id)}
+                      >
                         <AiFillMinusCircle style={decreaseStyle} />
                       </button>
                       <div className="font-medium text-gray-800">
                         {item.quantity}
                       </div>
-                      <button type="button" onClick={handleIncreaseItemClick}>
+                      <button
+                        type="button"
+                        onClick={() => handleIncreaseItemClick(item.product.id)}
+                      >
                         <AiFillPlusCircle style={increaseStyle} />
                       </button>
                     </div>
@@ -115,6 +125,16 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
                   <td className="p-2 whitespace-nowrap">
                     <div className="text-lg text-center text-green-500">
                       {item.price * item.quantity}
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveItemClick(item.product.id)}
+                      >
+                        <RiDeleteBin2Line style={deleteStyle} />
+                      </button>
                     </div>
                   </td>
                 </tr>
