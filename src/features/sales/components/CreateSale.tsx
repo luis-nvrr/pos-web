@@ -1,4 +1,5 @@
 import React from 'react'
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import SearchProduct from '~/features/products/components/SearchProduct'
 import { SaleItem } from '../types'
 import { Select, SelectItem } from '~/components/Select/Select'
@@ -18,70 +19,108 @@ type ItemsTableProps = {
   itemsToSale: SaleItem[]
 }
 
-export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => (
-  <div className="bg-white shadow-lg rounded-sm border border-gray-200">
-    <header className="px-3 py-2 border-b border-gray-100">
-      <h2 className="font-semibold text-gray-800">Ticket</h2>
-    </header>
-    <div className="px-3">
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full">
-          <thead className="text-sm font-semibold uppercase text-gray-500 bg-gray-100">
-            <tr>
-              {headers.map((header) => (
-                <th className="p-2 whitespace-nowrap" key={header.id}>
-                  <div className="font-semibold text-center">
-                    {header.description}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="text-md divide-y divide-gray-100">
-            {itemsToSale.map((item) => (
-              <tr key={item.product.id}>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex items-center justify-center">
-                    <div className="font-medium text-gray-800">
-                      {item.product.id}
+export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
+  const increaseItem = useTicketItemsStore(
+    (state) => state.increaseItemInTicket,
+  )
+
+  const increaseStyle = {
+    color: '#16a34a',
+    fontSize: '1.5rem',
+  }
+
+  const decreaseStyle = {
+    color: '#dc2626',
+    fontSize: '1.5rem',
+  }
+
+  const handleIncreaseItemClick = (event: any) => {
+    const productItemId: number = Number(
+      event.target.parentNode.parentNode.parentNode.getAttribute('id'),
+    )
+    increaseItem(productItemId)
+  }
+
+  const handleDecreaseItemClick = (event: any) => {
+    const productItemId: number = Number(
+      event.target.parentNode.parentNode.parentNode.getAttribute('id'),
+    )
+  }
+
+  return (
+    <div className="bg-white shadow-lg rounded-sm border border-gray-200">
+      <header className="px-3 py-2 border-b border-gray-100">
+        <h2 className="font-semibold text-gray-800">Ticket</h2>
+      </header>
+      <div className="px-3">
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full">
+            <thead className="text-sm font-semibold uppercase text-gray-500 bg-gray-100">
+              <tr>
+                {headers.map((header) => (
+                  <th className="p-2 whitespace-nowrap" key={header.id}>
+                    <div className="font-semibold text-center">
+                      {header.description}
                     </div>
-                  </div>
-                </td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-center font-medium">
-                    {item.product.label}
-                  </div>
-                </td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-center font-medium text-green-500">
-                    {item.price}
-                  </div>
-                </td>
-                <td className="p-2 whitespace-nowrap ">
-                  <div className="flex items-center justify-center">
-                    <div className="font-medium text-gray-800">
-                      {item.quantity}
-                    </div>
-                  </div>
-                </td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-center font-medium">
-                    {item.product.available}
-                  </div>
-                </td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-lg text-center text-green-500">
-                    {item.price * item.quantity}
-                  </div>
-                </td>
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-md divide-y divide-gray-100">
+              {itemsToSale.map((item) => (
+                <tr key={item.product.id}>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="flex items-center justify-center">
+                      <div className="font-medium text-gray-800">
+                        {item.product.id}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="text-center font-medium">
+                      {item.product.label}
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="text-center font-medium text-green-500">
+                      {item.price}
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap ">
+                    <div
+                      id={`${item.product.id}`}
+                      className="flex items-center justify-center space-x-2"
+                    >
+                      <button type="button" onClick={handleDecreaseItemClick}>
+                        <AiFillMinusCircle style={decreaseStyle} />
+                      </button>
+                      <div className="font-medium text-gray-800">
+                        {item.quantity}
+                      </div>
+                      <button type="button" onClick={handleIncreaseItemClick}>
+                        <AiFillPlusCircle style={increaseStyle} />
+                      </button>
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="text-center font-medium">
+                      {item.product.available}
+                    </div>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="text-lg text-center text-green-500">
+                      {item.price * item.quantity}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 const selectItems: SelectItem[] = [
   { id: 1, description: 'Efectivo', value: 'cash' },
