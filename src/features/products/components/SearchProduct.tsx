@@ -11,7 +11,8 @@ const customStyles = {
 }
 
 type SearchProductProps = {
-  handleSelectChange: (product) => void
+  // eslint-disable-next-line no-unused-vars
+  handleSelectChange: (product: any) => void
 }
 
 const SearchProduct: React.FC<SearchProductProps> = ({
