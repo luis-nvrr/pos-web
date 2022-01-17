@@ -54,5 +54,6 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'object-curly-newline': 'off',
     'react/react-in-jsx-scope': 'off',
+    'implicit-arrow-linebreak': 'off',
   },
 }
