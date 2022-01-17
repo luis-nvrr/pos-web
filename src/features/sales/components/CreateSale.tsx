@@ -95,7 +95,7 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
                   </td>
                   <td className="p-2 whitespace-nowrap">
                     <div className="text-center font-medium text-green-500">
-                      {item.price}
+                      {`$${item.price}`}
                     </div>
                   </td>
                   <td className="p-2 whitespace-nowrap ">
@@ -124,7 +124,7 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({ itemsToSale }) => {
                   </td>
                   <td className="p-2 whitespace-nowrap">
                     <div className="text-lg text-center text-green-500">
-                      {item.price * item.quantity}
+                      {`$${item.price * item.quantity}`}
                     </div>
                   </td>
                   <td className="p-2 whitespace-nowrap">
