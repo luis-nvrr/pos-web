@@ -12,6 +12,7 @@ type TicketItemsStore = {
   decreaseItemInTicket: (productId: number) => void
   // eslint-disable-next-line no-unused-vars
   removeItemFromTicket: (itemId: number) => void
+  removeAllItems: () => void
 }
 
 const sortItemsByCreationOrder = (items: SaleItem[]): SaleItem[] =>
@@ -128,6 +129,10 @@ const handleDecreaseItemInTicket = (
   })
 }
 
+const handleRemoveAllItems = (set: SetState<TicketItemsStore>) => {
+  set({ items: [] })
+}
+
 const useTicketItemsStore = create<TicketItemsStore>((set) => ({
   items: [],
   addItemToTicket: (product) => handleAddItemToTicket(set, product),
@@ -137,6 +142,7 @@ const useTicketItemsStore = create<TicketItemsStore>((set) => ({
     handleDecreaseItemInTicket(set, productId),
   removeItemFromTicket: (productId) =>
     handleRemoveItemFromTicket(set, productId),
+  removeAllItems: () => handleRemoveAllItems(set),
 }))
 
 export default useTicketItemsStore

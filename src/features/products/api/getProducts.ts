@@ -21,11 +21,11 @@ export const products: Product[] = [
 
 export const getProducts = async (): Promise<Product[]> => axios.get('/users')
 
-export const getProductsMock = (
-  succeed: boolean = true,
-  timeout: number = 2,
-): Promise<Product[]> =>
-  new Promise<Product[]>((resolve, reject) => {
+export const getProductsMock = (): Promise<Product[]> => {
+  const succeed = true
+  const timeout = 2
+
+  return new Promise<Product[]>((resolve, reject) => {
     setTimeout(() => {
       if (succeed) {
         resolve(products)
@@ -34,6 +34,7 @@ export const getProductsMock = (
       }
     }, timeout)
   })
+}
 
 export const useProducts = () =>
   useQuery({

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import SearchProduct from '~/features/products/components/SearchProduct'
@@ -6,6 +6,7 @@ import { SaleItem } from '../types'
 import { Select, SelectItem } from '~/components/Select/Select'
 import { Product } from '~/features/products/types'
 import useTicketItemsStore from '../hooks'
+import { CreateSaleDTO, useCreateSale } from '../api/createSale'
 
 const headers = [
   { id: 1, description: 'código' },
@@ -156,9 +157,14 @@ const selectItems: SelectItem[] = [
 
 type SummaryCardProps = {
   items: SaleItem[]
+  // eslint-disable-next-line no-unused-vars
+  handleSubmitSale: (event: FormEvent<HTMLFormElement>) => Promise<void>
 }
 
-export const SummaryCard: React.FC<SummaryCardProps> = ({ items }) => {
+export const SummaryCard: React.FC<SummaryCardProps> = ({
+  items,
+  handleSubmitSale,
+}) => {
   const totalPrice = items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -178,14 +184,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ items }) => {
           </div>
           <Select items={selectItems} />
         </div>
-        <div>
+        <form onSubmit={handleSubmitSale}>
           <button
-            type="button"
+            type="submit"
             className="bg-orange-500 rounded-xl p-2 text-white w-full"
           >
             Vender
           </button>
-        </div>
+        </form>
       </div>
     </div>
   )
@@ -193,11 +199,30 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ items }) => {
 
 export const CreateSale: React.FC = () => {
   const addItemToTicket = useTicketItemsStore((state) => state.addItemToTicket)
-
+  const createSaleMutation = useCreateSale({})
+  const removeAllItemsFromTicket = useTicketItemsStore(
+    (state) => state.removeAllItems,
+  )
   const items = useTicketItemsStore((state) => state.items)
 
   const handleSelectChange = (product: Product) => {
     addItemToTicket(product)
+  }
+
+  const handleSubmitSale = async (
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    event.preventDefault()
+
+    const sale: CreateSaleDTO = {
+      data: {
+        items,
+      },
+    }
+
+    await createSaleMutation.mutateAsync(sale)
+
+    removeAllItemsFromTicket()
   }
 
   return (
@@ -205,7 +230,7 @@ export const CreateSale: React.FC = () => {
       <SearchProduct handleSelectChange={handleSelectChange} />
       <div className="flex flex-row space-x-10">
         <ItemsTable itemsToSale={items} />
-        <SummaryCard items={items} />
+        <SummaryCard items={items} handleSubmitSale={handleSubmitSale} />
       </div>
     </div>
   )
