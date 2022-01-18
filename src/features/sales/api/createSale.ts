@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useMutation } from 'react-query'
 import { MutationConfig, queryClient } from '~/lib/react-query'
+import useTicketItemsStore from '../hooks'
 import { Sale, SaleItem } from '../types'
 
 export type CreateSaleDTO = {
@@ -35,8 +36,10 @@ type UseCreateSaleOptions = {
   config?: MutationConfig<typeof createSale>
 }
 
-export const useCreateSale = ({ config }: UseCreateSaleOptions) =>
-  useMutation({
+export const useCreateSale = ({ config }: UseCreateSaleOptions) => {
+  const { removeAllItems } = useTicketItemsStore()
+
+  return useMutation({
     onMutate: async (newSale: CreateSaleDTO) => {
       const previousSales = queryClient.getQueryData<Sale[]>(['sales'])
       queryClient.setQueryData(
@@ -52,7 +55,9 @@ export const useCreateSale = ({ config }: UseCreateSaleOptions) =>
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['sales'])
+      removeAllItems()
     },
     ...config,
     mutationFn: createSaleMock,
   })
+}

@@ -200,9 +200,6 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
 export const CreateSale: React.FC = () => {
   const addItemToTicket = useTicketItemsStore((state) => state.addItemToTicket)
   const createSaleMutation = useCreateSale({})
-  const removeAllItemsFromTicket = useTicketItemsStore(
-    (state) => state.removeAllItems,
-  )
   const items = useTicketItemsStore((state) => state.items)
 
   const handleSelectChange = (product: Product) => {
@@ -221,8 +218,6 @@ export const CreateSale: React.FC = () => {
     }
 
     await createSaleMutation.mutateAsync(sale)
-
-    removeAllItemsFromTicket()
   }
 
   return (
