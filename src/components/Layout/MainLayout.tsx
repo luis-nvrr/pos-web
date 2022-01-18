@@ -1,4 +1,5 @@
 import React from 'react'
+import { Toaster } from 'react-hot-toast'
 
 type NavbarAction = {
   id: number
@@ -62,6 +63,7 @@ type MainProps = {
 export const MainLayout: React.FC<MainProps> = ({ children }) => (
   <div className="h-screen px-6 space-y-2">
     <Header tabs={actions} />
+    <Toaster />
     <main className="h-4/5">{children}</main>
   </div>
 )

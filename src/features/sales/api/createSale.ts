@@ -3,6 +3,7 @@ import { useMutation } from 'react-query'
 import { MutationConfig, queryClient } from '~/lib/react-query'
 import useTicketItemsStore from '../hooks'
 import { Sale, SaleItem } from '../types'
+import { showSuccessNotification } from '~/components/Notification'
 
 export type CreateSaleDTO = {
   data: {
@@ -55,6 +56,7 @@ export const useCreateSale = ({ config }: UseCreateSaleOptions) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['sales'])
+      showSuccessNotification('Venta registrada')
       removeAllItems()
     },
     ...config,
