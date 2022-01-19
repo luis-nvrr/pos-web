@@ -5,3 +5,10 @@ export type Product = {
   price: number
   available: number
 }
+
+export type GetProductResponseDTO = {
+  barCode: number
+  description: string
+  price: number
+  available: number
+}

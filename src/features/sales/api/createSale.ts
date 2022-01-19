@@ -1,31 +1,27 @@
-import axios from 'axios'
 import { useMutation } from 'react-query'
+import axios from '~/lib/axios'
 import { MutationConfig, queryClient } from '~/lib/react-query'
 import useTicketItemsStore from '../hooks'
-import { Sale, SaleItem } from '../types'
+import { CreateSaleRequestDTO, Sale } from '../types'
 import { showSuccessNotification } from '~/components/Notification'
 
-export type CreateSaleDTO = {
-  data: {
-    items: SaleItem[]
-  }
+export const createSale = async (
+  sale: CreateSaleRequestDTO,
+): Promise<CreateSaleRequestDTO> => {
+  await axios.post('/sales', sale)
+  return sale
 }
 
-export const createSale = ({ data }: CreateSaleDTO): Promise<Sale> =>
-  axios.post('/sales', data)
-
-export const createSaleMock = ({ data }: CreateSaleDTO): Promise<Sale> => {
+export const createSaleMock = ({
+  items,
+}: CreateSaleRequestDTO): Promise<CreateSaleRequestDTO> => {
   const succeed = true
   const timeout = 2
-  const newSale: Sale = {
-    id: 1,
-    items: data.items,
-  }
 
-  return new Promise<Sale>((resolve, reject) => {
+  return new Promise<CreateSaleRequestDTO>((resolve, reject) => {
     setTimeout(() => {
       if (succeed) {
-        resolve(newSale)
+        resolve({ items })
       } else {
         reject(new Error("couldn't fetch"))
       }
@@ -41,12 +37,9 @@ export const useCreateSale = ({ config }: UseCreateSaleOptions) => {
   const { removeAllItems } = useTicketItemsStore()
 
   return useMutation({
-    onMutate: async (newSale: CreateSaleDTO) => {
+    onMutate: async (newSale: CreateSaleRequestDTO) => {
       const previousSales = queryClient.getQueryData<Sale[]>(['sales'])
-      queryClient.setQueryData(
-        ['sales'],
-        [...(previousSales || []), newSale.data],
-      )
+      queryClient.setQueryData(['sales'], [...(previousSales || []), newSale])
       return { previousSales }
     },
     onError: (noUsed1, noUsed2, context: any) => {

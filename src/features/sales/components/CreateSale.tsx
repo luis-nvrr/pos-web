@@ -2,11 +2,11 @@ import React, { FormEvent } from 'react'
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import SearchProduct from '~/features/products/components/SearchProduct'
-import { SaleItem } from '../types'
+import { CreateSaleRequestDTO, Sale, SaleItem } from '../types'
 import { Select, SelectItem } from '~/components/Select/Select'
 import { Product } from '~/features/products/types'
 import useTicketItemsStore from '../hooks'
-import { CreateSaleDTO, useCreateSale } from '../api/createSale'
+import { useCreateSale } from '../api/createSale'
 
 const headers = [
   { id: 1, description: 'código' },
@@ -211,13 +211,15 @@ export const CreateSale: React.FC = () => {
   ): Promise<void> => {
     event.preventDefault()
 
-    const sale: CreateSaleDTO = {
-      data: {
-        items,
-      },
+    const newSale: CreateSaleRequestDTO = {
+      items: items.map((item) => ({
+        id: item.id,
+        productId: item.product.id,
+        quantity: item.quantity,
+      })),
     }
 
-    await createSaleMutation.mutateAsync(sale)
+    await createSaleMutation.mutateAsync(newSale)
   }
 
   return (

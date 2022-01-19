@@ -10,6 +10,15 @@ export type SaleItem = {
 }
 
 export type Sale = {
-  id: number
   items: SaleItem[]
+}
+
+export type CreateSaleItemRequestDTO = {
+  id: number
+  productId: number
+  quantity: number
+}
+
+export type CreateSaleRequestDTO = {
+  items: CreateSaleItemRequestDTO[]
 }
