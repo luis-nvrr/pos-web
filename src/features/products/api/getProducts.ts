@@ -6,21 +6,21 @@ export const productsMock: Product[] = [
   {
     id: 1,
     label: 'Coca cola',
-    value: 'coca cola',
+    value: '1',
     price: 5,
     available: 10,
   },
   {
     id: 2,
     label: 'Sprite',
-    value: 'sprite',
+    value: '2',
     price: 10,
     available: 20,
   },
   {
     id: 3,
     label: 'Arroz',
-    value: 'arroz',
+    value: '3',
     price: 5,
     available: 12,
   },
@@ -32,7 +32,7 @@ export const getProducts = async (): Promise<Product[]> => {
     ...product,
     id: product.barCode,
     label: product.description,
-    value: product.description.toLowerCase(),
+    value: product.barCode.toString(),
   }))
 
   return products
@@ -42,12 +42,12 @@ export const getProductsMock = (): Promise<Product[]> => {
   const succeed = true
   const timeout = 2
 
-  return new Promise<Product[]>((resolve, reject) => {
+  return new Promise<Product[]>((resolve) => {
     setTimeout(() => {
       if (succeed) {
         resolve(productsMock)
       } else {
-        reject(new Error("couldn't fetch"))
+        resolve([])
       }
     }, timeout)
   })
@@ -56,5 +56,5 @@ export const getProductsMock = (): Promise<Product[]> => {
 export const useProducts = () =>
   useQuery({
     queryKey: ['products'],
-    queryFn: () => getProductsMock(),
+    queryFn: getProductsMock,
   })
